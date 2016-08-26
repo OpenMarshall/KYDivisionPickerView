@@ -88,11 +88,11 @@ class KYDivisionPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewData
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         switch component {
         case 0:
-            updateComponentForCity(provinces[row].num)
+            if row < provinces.count { updateComponentForCity(provinces[row].num) }
         case 1:
-            updateComponentForCounty(cities[row].num)
+            if row < cities.count    { updateComponentForCounty(cities[row].num) }
         case 2:
-            updateComponentForStreet(counties[row].num)
+            if row < counties.count  { updateComponentForStreet(counties[row].num) }
         case 3:
             passAddressStr()
         default:
