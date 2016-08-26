@@ -8,6 +8,11 @@
 希望在滑动 <code>PickerView</code> 选择了地址之后，拿到地址字符串，需要遵守协议 <code>KYDivisionPickerViewDelegate</code>，实现协议中的方法 <br><code>func didGetAddressFromPickerView(provinceName provinceName:String?, cityName:String?, countyName:String?, streetName:String?)</code>
 <br>方法中的四个参数即是 <code>KYDivisionPickerView</code> 选择的省、市、县、街道的名称字符串
 
+## 可配置项
+    divisionPicker.adjustsFontSizeToFitWidth = true // default: false
+    divisionPicker.fontSize = 12 // default: 14
+    divisionPicker.textColor = UIColor.redColor() // default: UIColor.blackColor()
+
 ## 其他
 数据来源于 [mumuy/data_location](https://github.com/mumuy/data_location)，感谢~
 <br>JSON 处理使用 [SwiftyJSON](https://github.com/SwiftyJSON/SwiftyJSON)，已直接拷贝 <code>SwiftyJSON.swift</code> 文件到项目中
