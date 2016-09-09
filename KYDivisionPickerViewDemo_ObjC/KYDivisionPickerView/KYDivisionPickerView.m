@@ -160,14 +160,15 @@
 #pragma mark - Life Cycle
 -(instancetype)initWithFrame:(CGRect)frame {
     if ((self = [super initWithFrame:frame])) {
-        self.adjustsFontSizeToFitWidth = NO;
-        self.fontSize  = 14;
-        self.textColor = [UIColor blackColor];
         
-        self.provinces = [DivisionData provinces];
-        self.cities    = [DivisionData citiesWithProvinceNum: 110000]; // 默认传参北京市
-        self.counties  = [DivisionData countiesWithCityNum: 110000]; // 默认传参北京市
-        self.streets   = [DivisionData streetsWithCountyNum: 110101]; // 默认传参（北京市）东城区
+        _adjustsFontSizeToFitWidth = NO;
+        _fontSize  = 14;
+        _textColor = [UIColor blackColor];
+        
+        _provinces = [DivisionData provinces];
+        _cities    = [DivisionData citiesWithProvinceNum: 110000]; // 默认传参北京市
+        _counties  = [DivisionData countiesWithCityNum: 110000]; // 默认传参北京市
+        _streets   = [DivisionData streetsWithCountyNum: 110101]; // 默认传参（北京市）东城区
         
         self.delegate = self;
         self.dataSource = self;
@@ -190,16 +191,16 @@
 -(NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
     switch (component) {
         case 0:
-            return self.provinces.count;
+            return _provinces.count;
             break;
         case 1:
-            return self.cities.count;
+            return _cities.count;
             break;
         case 2:
-            return self.counties.count;
+            return _counties.count;
             break;
         case 3:
-            return self.streets.count;
+            return _streets.count;
             break;
         default:
             return 0;
@@ -210,23 +211,23 @@
 -(UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view {
 
     UILabel* label = [[UILabel alloc] initWithFrame: CGRectMake(8, 0, self.frame.size.width/4 - 16, 30)];
-    label.adjustsFontSizeToFitWidth = self.adjustsFontSizeToFitWidth;
-    label.font = [UIFont systemFontOfSize: self.fontSize];
+    label.adjustsFontSizeToFitWidth = _adjustsFontSizeToFitWidth;
+    label.font = [UIFont systemFontOfSize: _fontSize];
     label.textAlignment = NSTextAlignmentCenter;
     Location* loc = [[Location alloc] init];
     
     switch (component) {
         case 0:
-            if (row < self.provinces.count) { loc = self.provinces[row]; }
+            if (row < _provinces.count) { loc = _provinces[row]; }
             break;
         case 1:
-            if (row < self.cities.count) { loc = self.cities[row]; }
+            if (row < _cities.count) { loc = _cities[row]; }
             break;
         case 2:
-            if (row < self.counties.count) { loc = self.counties[row]; }
+            if (row < _counties.count) { loc = _counties[row]; }
             break;
         case 3:
-            if (row < self.streets.count) { loc = self.streets[row]; }
+            if (row < _streets.count) { loc = _streets[row]; }
             break;
         default:
             break;
@@ -239,20 +240,20 @@
 -(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
     switch (component) {
         case 0:
-            if (row < self.provinces.count) {
-                Location* loc = self.provinces[row];
+            if (row < _provinces.count) {
+                Location* loc = _provinces[row];
                 [self updateComponentForCityWithProvinceNum:loc.num];
             }
             break;
         case 1:
-            if (row < self.cities.count) {
-                Location* loc = self.cities[row];
+            if (row < _cities.count) {
+                Location* loc = _cities[row];
                 [self updateComponentForCountyWithCityNum:loc.num];
             }
             break;
         case 2:
-            if (row < self.counties.count) {
-                Location* loc = self.counties[row];
+            if (row < _counties.count) {
+                Location* loc = _counties[row];
                 [self updateComponentForStreetWithCountyNum:loc.num];
             }
             break;
@@ -267,15 +268,15 @@
 
 #pragma mark - Update
 -(void)updateComponentForCityWithProvinceNum:(int)provinceNum { // 修改省，更新市、县、街道
-    self.cities = [DivisionData citiesWithProvinceNum: provinceNum];
+    _cities = [DivisionData citiesWithProvinceNum: provinceNum];
     [self reloadComponent: 1];
     [self selectRow:0 inComponent:1 animated:YES];
-    if (self.cities.count != 0) {
-        Location* loc = self.cities[0];
+    if (_cities.count != 0) {
+        Location* loc = _cities[0];
         [self updateComponentForCountyWithCityNum: loc.num];
     }else {
-        [self.counties removeAllObjects];
-        [self.streets removeAllObjects];
+        [_counties removeAllObjects];
+        [_streets removeAllObjects];
         [self reloadComponent: 2];
         [self reloadComponent: 3];
         [self passAddressStr];
@@ -283,21 +284,21 @@
 }
 
 -(void)updateComponentForCountyWithCityNum:(int)cityNum { // 修改市，更新县、街道
-    self.counties = [DivisionData countiesWithCityNum: cityNum];
+    _counties = [DivisionData countiesWithCityNum: cityNum];
     [self reloadComponent:2];
     [self selectRow:0 inComponent:2 animated:YES];
-    if (self.counties.count != 0) {
-        Location* loc = self.counties[0];
+    if (_counties.count != 0) {
+        Location* loc = _counties[0];
         [self updateComponentForStreetWithCountyNum:loc.num];
     }else {
-        [self.streets removeAllObjects];
+        [_streets removeAllObjects];
         [self reloadComponent:3];
         [self passAddressStr];
     }
 }
 
 -(void)updateComponentForStreetWithCountyNum:(int)countyNum { // 修改县，更新街道
-    self.streets = [DivisionData streetsWithCountyNum:countyNum];
+    _streets = [DivisionData streetsWithCountyNum:countyNum];
     [self reloadComponent:3];
     [self selectRow:0 inComponent:3 animated:YES];
     [self passAddressStr];
@@ -307,38 +308,38 @@
     NSString* provinceStr = [[NSString alloc] init];
     NSInteger row = [self selectedRowInComponent:0];
     if (row < 0) { row = 0;}
-    if (row < self.provinces.count) {
-        Location* loc = self.provinces[row];
+    if (row < _provinces.count) {
+        Location* loc = _provinces[row];
         provinceStr = loc.name;
     }
     
     NSString* cityStr = [[NSString alloc] init];
     row = [self selectedRowInComponent:1];
     if (row < 0) { row = 0;}
-    if (row < self.cities.count) {
-        Location* loc = self.cities[row];
+    if (row < _cities.count) {
+        Location* loc = _cities[row];
         cityStr = loc.name;
     }
     
     NSString* countyStr = [[NSString alloc] init];
     row = [self selectedRowInComponent:2];
     if (row < 0) { row = 0;}
-    if (row < self.counties.count) {
-        Location* loc = self.counties[row];
+    if (row < _counties.count) {
+        Location* loc = _counties[row];
         countyStr = loc.name;
     }
     
     NSString* streetStr = [[NSString alloc] init];
     row = [self selectedRowInComponent:3];
     if (row < 0) { row = 0;}
-    if (row < self.streets.count) {
-        Location* loc = self.streets[row];
+    if (row < _streets.count) {
+        Location* loc = _streets[row];
         streetStr = loc.name;
     }
     
-    if (self.divisionDelegate != nil) {
+    if (_divisionDelegate != nil) {
         // 代理方法传出 PickerView 对应的地址字符串
-        [self.divisionDelegate didGetAddressFromPickerViewWithProvinceName:provinceStr
+        [_divisionDelegate didGetAddressFromPickerViewWithProvinceName:provinceStr
                                                                   cityName:cityStr
                                                                 countyName:countyStr
                                                                 streetName:streetStr];

@@ -17,8 +17,6 @@
 @end
 
 @implementation ViewController
-@synthesize divisionLabel = _divisionLabel;
-@synthesize divisionPicker = _divisionPicker;
 
 #pragma mark - Life Cycle
 - (void)viewDidLoad {

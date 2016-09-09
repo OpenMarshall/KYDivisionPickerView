@@ -28,10 +28,10 @@ class KYDivisionPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewData
     var divisionDelegate: KYDivisionPickerViewDelegate? = nil
     
     // 数据来源
-    fileprivate let provinces = DivisionData.provinces()
-    fileprivate var cities    = DivisionData.cities(provinceNum: 110000) // 默认传参北京市
-    fileprivate var counties  = DivisionData.counties(cityNum: 110000) // 默认传参北京市
-    fileprivate var streets   = DivisionData.streets(countyNum: 110101) // 默认传参（北京市）东城区
+    private let provinces = DivisionData.provinces()
+    private var cities    = DivisionData.cities(provinceNum: 110000) // 默认传参北京市
+    private var counties  = DivisionData.counties(cityNum: 110000) // 默认传参北京市
+    private var streets   = DivisionData.streets(countyNum: 110101) // 默认传参（北京市）东城区
     
     
     // MARK: - Life Cycle
@@ -105,7 +105,7 @@ class KYDivisionPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewData
     
     
     // MARK: - Update
-    func updateComponentForCity(provinceNum:Int) { // 修改省，更新市、县、街道
+    private func updateComponentForCity(provinceNum:Int) { // 修改省，更新市、县、街道
         cities = DivisionData.cities(provinceNum: provinceNum)
         self.reloadComponent(1)
         self.selectRow(0, inComponent: 1, animated: true)
@@ -120,7 +120,7 @@ class KYDivisionPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewData
         }
     }
     
-    func updateComponentForCounty(cityNum:Int) { // 修改市，更新县、街道
+    private func updateComponentForCounty(cityNum:Int) { // 修改市，更新县、街道
         counties = DivisionData.counties(cityNum: cityNum)
         self.reloadComponent(2)
         self.selectRow(0, inComponent: 2, animated: true)
@@ -133,14 +133,14 @@ class KYDivisionPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewData
         }
     }
     
-    func updateComponentForStreet(countyNum:Int) { // 修改县，更新街道
+    private func updateComponentForStreet(countyNum:Int) { // 修改县，更新街道
         streets = DivisionData.streets(countyNum: countyNum)
         self.reloadComponent(3)
         self.selectRow(0, inComponent: 3, animated: true)
         passAddressStr()
     }
     
-    func passAddressStr() {
+    private func passAddressStr() {
         var provinceStr: String? = nil
         var row = self.selectedRow(inComponent: 0)
         if row < 0 { row = 0 }
@@ -177,18 +177,19 @@ class KYDivisionPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewData
                 countyName: countyStr, streetName: streetStr)
         }
     }
+    
 }
 
 
 // 用这个类从 JSON 文件中获取内容
 private class DivisionData {
     
-    fileprivate struct Location {
+    private struct Location {
         var num: Int
         var name: String
     }
     
-    fileprivate class func divisionJson() -> JSON? {
+    private class func divisionJson() -> JSON? {
         guard let divisionJsonFile = Bundle.main.path(forResource: "KYDivisionPickerView_list", ofType: "json")
             else {return nil}
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: divisionJsonFile))
