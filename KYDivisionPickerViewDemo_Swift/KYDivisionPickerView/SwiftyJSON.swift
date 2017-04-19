@@ -189,7 +189,7 @@ public struct JSON {
                     self.rawString = value as! String
                 case .unknown:
                     _error = NSError(domain: ErrorDomain, code: ErrorUnsupportedType, userInfo: [NSLocalizedDescriptionKey: "It is a unsupported type"])
-                    print("==> error=\(_error). type=\(type(of: newValue))")
+                    print("==> error=\(String(describing: _error)). type=\(type(of: newValue))")
             }
 #else
             if  type(of: newValue) == Bool.self {
@@ -232,11 +232,10 @@ public struct JSON {
       var type: Type
       var value: Any
 
-      switch newValue {
-      case let bool as Bool:
+      if let bool = newValue as? Bool {
           type = .bool
           value = bool
-      case let number as NSNumber:
+      } else if let number = newValue as? NSNumber {
           if number.isBool {
             type = .bool
             value = number.boolValue
@@ -244,77 +243,38 @@ public struct JSON {
             type = .number
             value = number
           }
-      case let number as Double:
+      } else if let number = newValue as? Double {
           type = .number
           value = NSNumber(value: number)
-      case let number as Int:
+      } else if let number = newValue as? Int {
           type = .number
           value = NSNumber(value: number)
-      case  let string as String:
+      } else if let string = newValue as? String {
           type = .string
           value = string
-      case  let string as NSString:
+      } else if let string = newValue as? NSString {
           type = .string
           value = string._bridgeToSwift()
-      case  _ as NSNull:
+      } else if newValue is NSNull {
           type = .null
           value = ""
-      case let array as NSArray:
+      } else if let array = newValue as? NSArray {
           type = .array
-          value = array._bridgeToSwift().map { $0 as Any }
-      case let dictionary as NSDictionary:
+          value = array._bridgeToSwift()
+      } else if let array = newValue as? Array<Any> {
+          type = .array
+          value = array
+      } else if let dictionary = newValue as? NSDictionary {
           type = .dictionary
-          var dict = [String: Any]()
-          dictionary.enumerateKeysAndObjects(using: {(key: Any, val: Any, stop: UnsafeMutablePointer<ObjCBool>) in
-                let keyStr = key as! String
-                dict[keyStr] = val
-          })
-          value = dict
-      default:
-          let mirror = Mirror(reflecting: newValue)
-          if  mirror.displayStyle == .collection  {
-              type = .array
-              value = mirror.children.map { $0.value as Any }
-          }
-          else if  mirror.displayStyle == .dictionary  {
-              let children = mirror.children.map { $0.value }
-              let elems = convertToKeyValues(children)
-              if  children.count == elems.count  {
-                  type = .dictionary
-                  var dict = [String: Any]()
-                  for (key, val) in elems {
-                      dict[key] = val as Any
-                  }
-                  value = dict
-              }
-              else {
-                  type = .unknown
-                  value = ""
-              }
-          }
-          else {
-              type = .unknown
-              value = ""
-          }
+          value = dictionary._bridgeToSwift()
+      } else if let dictionary = newValue as? Dictionary<String, Any> {
+          type = .dictionary
+          value = dictionary
+      } else {
+          type = .unknown
+          value = ""
       }
       return (type, value)
-    }
-
-    private func convertToKeyValues(_ pairs: [Any]) -> [(String, Any)] {
-       var result = [(String, Any)]()
-       for pair in pairs {
-          let pairMirror = Mirror(reflecting: pair)
-          if  pairMirror.displayStyle == .tuple  &&  pairMirror.children.count == 2 {
-              let generator = pairMirror.children.makeIterator()
-              if  let key = generator.next()!.value as? String {
-                  result.append((key, generator.next()!.value))
-              }
-              else {
-                  break
-              }
-          }
-       }
-       return result
     }
 
 #endif
@@ -734,7 +694,27 @@ extension JSON {
 }
 
 // MARK: - LiteralConvertible
-extension JSON: Swift.ExpressibleByStringLiteral {
+
+//TODO: Remove this after we remove support for Swift 3.0.2
+#if swift(>=3.1)
+    typealias ExpressibleByStringLiteralType = ExpressibleByStringLiteral
+    typealias ExpressibleByIntegerLiteralType = ExpressibleByIntegerLiteral
+    typealias ExpressibleByBooleanLiteralType = ExpressibleByBooleanLiteral
+    typealias ExpressibleByFloatLiteralType = ExpressibleByFloatLiteral
+    typealias ExpressibleByDictionaryLiteralType = ExpressibleByDictionaryLiteral
+    typealias ExpressibleByArrayLiteralType = ExpressibleByArrayLiteral
+    typealias ExpressibleByNilLiteralType = ExpressibleByNilLiteral
+#else
+    typealias ExpressibleByStringLiteralType = Swift.StringLiteralConvertible
+    typealias ExpressibleByIntegerLiteralType = Swift.IntegerLiteralConvertible
+    typealias ExpressibleByBooleanLiteralType = Swift.BooleanLiteralConvertible
+    typealias ExpressibleByFloatLiteralType = Swift.FloatLiteralConvertible
+    typealias ExpressibleByDictionaryLiteralType = Swift.DictionaryLiteralConvertible
+    typealias ExpressibleByArrayLiteralType = Swift.ArrayLiteralConvertible
+    typealias ExpressibleByNilLiteralType = Swift.NilLiteralConvertible
+#endif
+
+extension JSON: ExpressibleByStringLiteralType {
 
     public init(stringLiteral value: StringLiteralType) {
         self.init(value as Any)
@@ -749,28 +729,28 @@ extension JSON: Swift.ExpressibleByStringLiteral {
     }
 }
 
-extension JSON: Swift.ExpressibleByIntegerLiteral {
+extension JSON: ExpressibleByIntegerLiteralType {
 
     public init(integerLiteral value: IntegerLiteralType) {
         self.init(value as Any)
     }
 }
 
-extension JSON: Swift.ExpressibleByBooleanLiteral {
+extension JSON: ExpressibleByBooleanLiteralType {
 
     public init(booleanLiteral value: BooleanLiteralType) {
         self.init(value as Any)
     }
 }
 
-extension JSON: Swift.ExpressibleByFloatLiteral {
+extension JSON: ExpressibleByFloatLiteralType {
 
     public init(floatLiteral value: FloatLiteralType) {
         self.init(value as Any)
     }
 }
 
-extension JSON: Swift.ExpressibleByDictionaryLiteral {
+extension JSON: ExpressibleByDictionaryLiteralType {
 
     public init(dictionaryLiteral elements: (String, Any)...) {
         self.init(elements.reduce([String : Any](minimumCapacity: elements.count)){(dictionary: [String : Any], element:(String, Any)) -> [String : Any] in
@@ -781,14 +761,14 @@ extension JSON: Swift.ExpressibleByDictionaryLiteral {
     }
 }
 
-extension JSON: Swift.ExpressibleByArrayLiteral {
+extension JSON: ExpressibleByArrayLiteralType {
 
     public init(arrayLiteral elements: Any...) {
         self.init(elements as Any)
     }
 }
 
-extension JSON: Swift.ExpressibleByNilLiteral {
+extension JSON: ExpressibleByNilLiteralType {
 
     public init(nilLiteral: ()) {
         self.init(NSNull() as Any)
@@ -816,7 +796,7 @@ extension JSON: Swift.RawRepresentable {
             throw SwiftyJSONError.errorInvalidJSON("JSON is invalid")
         }
 
-        return try LclJSONSerialization.dataWithJSONObject(self.object, options: opt)
+        return try LclJSONSerialization.data(withJSONObject: self.object, options: opt)
     }
 #else
     public func rawData(options opt: JSONSerialization.WritingOptions = JSONSerialization.WritingOptions(rawValue: 0)) throws -> Data {
@@ -1173,9 +1153,9 @@ extension JSON {
         }
         set {
 #if os(Linux)
-            self.object = newValue?.absoluteString._bridgeToObjectiveC()
+            self.object = newValue?.absoluteString._bridgeToObjectiveC() as Any
 #else
-            self.object = newValue?.absoluteString ?? ""
+            self.object = newValue?.absoluteString as Any
 #endif
         }
     }

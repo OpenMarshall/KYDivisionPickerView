@@ -5736,7 +5736,7 @@
 		5F17AC581D7BCA4C00145E37 /* KYDivisionPickerView_659004.json in Resources */ = {isa = PBXBuildFile; fileRef = 5F17A12E1D7BCA4B00145E37 /* KYDivisionPickerView_659004.json */; };
 		5F17AC591D7BCA4C00145E37 /* KYDivisionPickerView_list.json in Resources */ = {isa = PBXBuildFile; fileRef = 5F17A12F1D7BCA4B00145E37 /* KYDivisionPickerView_list.json */; };
 		5F17AC5C1D7BCB8600145E37 /* KYDivisionPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F17AC5B1D7BCB8600145E37 /* KYDivisionPickerView.m */; };
-		5FF8F6701D82817B00C5B938 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF8F66F1D82817B00C5B938 /* SwiftyJSON.swift */; };
+		5F7847101EA75D8E00044AFC /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F78470F1EA75D8E00044AFC /* SwiftyJSON.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -11475,8 +11475,8 @@
 		5F17A12F1D7BCA4B00145E37 /* KYDivisionPickerView_list.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = KYDivisionPickerView_list.json; sourceTree = "<group>"; };
 		5F17AC5A1D7BCB8600145E37 /* KYDivisionPickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KYDivisionPickerView.h; sourceTree = "<group>"; };
 		5F17AC5B1D7BCB8600145E37 /* KYDivisionPickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KYDivisionPickerView.m; sourceTree = "<group>"; };
+		5F78470F1EA75D8E00044AFC /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
 		5F9122E21D6FEA1F007505BB /* KYDivisionPickerViewDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KYDivisionPickerViewDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		5FF8F66F1D82817B00C5B938 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -11539,7 +11539,7 @@
 		5F177FA31D7BC73700145E37 /* KYDivisionPickerView */ = {
 			isa = PBXGroup;
 			children = (
-				5FF8F66F1D82817B00C5B938 /* SwiftyJSON.swift */,
+				5F78470F1EA75D8E00044AFC /* SwiftyJSON.swift */,
 				5F177FA41D7BC73700145E37 /* KYDivisionPickerView.swift */,
 				5F177FA51D7BC73700145E37 /* KYDivisionPickerViewJSON */,
 			);
@@ -23139,7 +23139,7 @@
 				5F178AD21D7BC75B00145E37 /* AppDelegate.swift in Sources */,
 				5F1796031D7BC75C00145E37 /* ViewController.swift in Sources */,
 				5F178AD71D7BC75C00145E37 /* KYDivisionPickerView.swift in Sources */,
-				5FF8F6701D82817B00C5B938 /* SwiftyJSON.swift in Sources */,
+				5F7847101EA75D8E00044AFC /* SwiftyJSON.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
