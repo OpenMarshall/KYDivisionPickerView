@@ -97,7 +97,7 @@
     NSEnumerator *enumerator = [dic keyEnumerator];
     NSString* key;
     while ((key = [enumerator nextObject])) {
-        if (([key hasPrefix:cityNumPrefix]) && !([key hasSuffix:@"0"])) {
+        if (([key hasPrefix:cityNumPrefix]) && !([key hasSuffix:@"00"])) {
             Location* loc = [[Location alloc] init];
             loc.num = [key intValue];
             loc.name = [dic objectForKey: key];

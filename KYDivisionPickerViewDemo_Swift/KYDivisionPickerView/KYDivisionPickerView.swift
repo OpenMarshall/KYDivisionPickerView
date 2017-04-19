@@ -254,7 +254,7 @@ private class DivisionData {
         var countiesArr = [Location]()
         // 添加数据
         for (index,subJson):(String, JSON) in json {
-            if index.hasPrefix(cityNumPrefix) && !index.hasSuffix("0") {
+            if index.hasPrefix(cityNumPrefix) && !index.hasSuffix("00") {
                 if let num = Int(index) {
                     let loc = Location(num: num, name: String(describing: subJson.rawString))
                     countiesArr.append(loc)
