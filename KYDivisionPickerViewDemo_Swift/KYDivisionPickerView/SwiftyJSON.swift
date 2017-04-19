@@ -734,7 +734,7 @@ extension JSON {
 }
 
 // MARK: - LiteralConvertible
-extension JSON: Swift.StringLiteralConvertible {
+extension JSON: Swift.ExpressibleByStringLiteral {
 
     public init(stringLiteral value: StringLiteralType) {
         self.init(value as Any)
@@ -749,28 +749,28 @@ extension JSON: Swift.StringLiteralConvertible {
     }
 }
 
-extension JSON: Swift.IntegerLiteralConvertible {
+extension JSON: Swift.ExpressibleByIntegerLiteral {
 
     public init(integerLiteral value: IntegerLiteralType) {
         self.init(value as Any)
     }
 }
 
-extension JSON: Swift.BooleanLiteralConvertible {
+extension JSON: Swift.ExpressibleByBooleanLiteral {
 
     public init(booleanLiteral value: BooleanLiteralType) {
         self.init(value as Any)
     }
 }
 
-extension JSON: Swift.FloatLiteralConvertible {
+extension JSON: Swift.ExpressibleByFloatLiteral {
 
     public init(floatLiteral value: FloatLiteralType) {
         self.init(value as Any)
     }
 }
 
-extension JSON: Swift.DictionaryLiteralConvertible {
+extension JSON: Swift.ExpressibleByDictionaryLiteral {
 
     public init(dictionaryLiteral elements: (String, Any)...) {
         self.init(elements.reduce([String : Any](minimumCapacity: elements.count)){(dictionary: [String : Any], element:(String, Any)) -> [String : Any] in
@@ -781,14 +781,14 @@ extension JSON: Swift.DictionaryLiteralConvertible {
     }
 }
 
-extension JSON: Swift.ArrayLiteralConvertible {
+extension JSON: Swift.ExpressibleByArrayLiteral {
 
     public init(arrayLiteral elements: Any...) {
         self.init(elements as Any)
     }
 }
 
-extension JSON: Swift.NilLiteralConvertible {
+extension JSON: Swift.ExpressibleByNilLiteral {
 
     public init(nilLiteral: ()) {
         self.init(NSNull() as Any)
@@ -1175,7 +1175,7 @@ extension JSON {
 #if os(Linux)
             self.object = newValue?.absoluteString._bridgeToObjectiveC()
 #else
-            self.object = newValue?.absoluteString
+            self.object = newValue?.absoluteString ?? ""
 #endif
         }
     }

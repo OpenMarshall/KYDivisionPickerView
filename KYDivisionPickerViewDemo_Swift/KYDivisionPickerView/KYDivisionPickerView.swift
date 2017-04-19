@@ -181,13 +181,13 @@ class KYDivisionPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewData
 }
 
 
+struct Location {
+    var num: Int
+    var name: String
+}
+
 // 用这个类从 JSON 文件中获取内容
 private class DivisionData {
-    
-    private struct Location {
-        var num: Int
-        var name: String
-    }
     
     private class func divisionJson() -> JSON? {
         guard let divisionJsonFile = Bundle.main.path(forResource: "KYDivisionPickerView_list", ofType: "json")
